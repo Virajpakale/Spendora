@@ -18,28 +18,30 @@ class UpdateChecker(private val context: Context) {
             url,
             { response ->
 
-                val latestVersion = response.getString("tag_name")
+                val latestVersionName = response.getString("tag_name")
+                val latestVersionCode =
+                    latestVersionName.replace("v", "").replace(".", "").toInt()
 
-                val currentVersion = context.packageManager
-                    .getPackageInfo(context.packageName, 0)
-                    .versionName
+                val packageInfo =
+                    context.packageManager.getPackageInfo(context.packageName, 0)
 
-                // Debug toast to check versions
+                val currentVersionCode = packageInfo.versionCode
+
                 Toast.makeText(
                     context,
-                    "Latest: $latestVersion | Current: v$currentVersion",
+                    "Latest: $latestVersionCode | Current: $currentVersionCode",
                     Toast.LENGTH_LONG
                 ).show()
 
-                if (latestVersion != "v$currentVersion") {
-                    showUpdateDialog(latestVersion)
+                if (latestVersionCode > currentVersionCode) {
+                    showUpdateDialog(latestVersionName)
                 }
 
             },
             { error ->
                 Toast.makeText(
                     context,
-                    "Update check failed: ${error.message}",
+                    "Update failed: ${error.message}",
                     Toast.LENGTH_LONG
                 ).show()
             }
