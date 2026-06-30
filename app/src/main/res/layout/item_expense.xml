@@ -4,21 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardBackgroundColor="#181818"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="18dp"
+    app:cardBackgroundColor="#111111">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Left Content -->
+        <!-- LEFT SIDE -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Category -->
             <TextView
                 android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
@@ -27,58 +28,80 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- Amount -->
             <TextView
                 android:id="@+id/tvAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp" />
 
-            <!-- Note -->
             <TextView
                 android:id="@+id/tvNote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#A3A3A3"
+                android:textColor="#AAAAAA"
                 android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="8dp"
+                android:maxLines="2" />
 
-            <!-- Location -->
             <TextView
                 android:id="@+id/tvLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#7A7A7A"
-                android:textSize="13sp"
+                android:textColor="#666666"
+                android:textSize="12sp"
                 android:layout_marginTop="8dp"
-                android:text="📍 Location" />
+                android:maxLines="2" />
+
         </LinearLayout>
 
-        <!-- Right Buttons -->
+        <!-- RIGHT SIDE -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginStart="16dp">
 
-            <ImageView
+            <TextView
                 android:id="@+id/btnEdit"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/ic_menu_edit"
-                android:tint="#F59E0B" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textColor="#F59E0B"
+                android:textStyle="bold"
+                android:textSize="14sp" />
 
-            <ImageView
+            <TextView
                 android:id="@+id/btnDelete"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginStart="12dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:tint="#F59E0B" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:textColor="#FF5252"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666666"
+                android:textSize="11sp"
+                android:layout_marginTop="4dp" />
+
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

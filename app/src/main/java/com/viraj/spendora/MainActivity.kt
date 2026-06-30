@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Auto update checker
+        UpdateChecker(this).checkForUpdates()
+
         db = Room.databaseBuilder(
             applicationContext,
             ExpenseDatabase::class.java,
@@ -35,16 +38,17 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         tvTotalSpent = findViewById(R.id.tvTotalSpent)
         tvStreakCount = findViewById(R.id.tvStreakCount)
-
         btnAddExpense = findViewById(R.id.btnAddExpense)
         btnAnalytics = findViewById(R.id.btnAnalytics)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        // Add Expense
         btnAddExpense.setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
         }
 
+        // Open Analytics
         btnAnalytics.setOnClickListener {
             startActivity(Intent(this, AnalyticsActivity::class.java))
         }

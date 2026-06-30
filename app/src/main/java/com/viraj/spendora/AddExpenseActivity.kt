@@ -3,31 +3,26 @@ package com.viraj.spendora
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.room.Room
+import com.google.android.material.button.MaterialButton
 
 class AddExpenseActivity : AppCompatActivity() {
 
     private lateinit var etAmount: EditText
-    private lateinit var spCategory: Spinner
     private lateinit var etNote: EditText
     private lateinit var btnSave: Button
     private lateinit var db: ExpenseDatabase
 
     private var expenseId = 0
+    private var selectedCategory = "Food"
 
-    private val categories = arrayOf(
-        "Food",
-        "Transport",
-        "Shopping",
-        "Bills",
-        "Entertainment",
-        "Health",
-        "Personal",
-        "Other"
-    )
+    private lateinit var categoryButtons: List<MaterialButton>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,30 +38,83 @@ class AddExpenseActivity : AppCompatActivity() {
             .build()
 
         etAmount = findViewById(R.id.etAmount)
-        spCategory = findViewById(R.id.spCategory)
         etNote = findViewById(R.id.etNote)
-        btnSave = findViewById(R.id.btnSave)
+        btnSave = findViewById(R.id.btnSaveExpense)
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            categories
+        val btnFood = findViewById<MaterialButton>(R.id.btnFood)
+        val btnTransport = findViewById<MaterialButton>(R.id.btnTransport)
+        val btnShopping = findViewById<MaterialButton>(R.id.btnShopping)
+        val btnEntertainment = findViewById<MaterialButton>(R.id.btnEntertainment)
+        val btnBills = findViewById<MaterialButton>(R.id.btnBills)
+        val btnHealth = findViewById<MaterialButton>(R.id.btnHealth)
+        val btnPersonal = findViewById<MaterialButton>(R.id.btnPersonal)
+        val btnOther = findViewById<MaterialButton>(R.id.btnOther)
+
+        categoryButtons = listOf(
+            btnFood,
+            btnTransport,
+            btnShopping,
+            btnEntertainment,
+            btnBills,
+            btnHealth,
+            btnPersonal,
+            btnOther
         )
 
-        spCategory.adapter = adapter
+        btnFood.setOnClickListener {
+            selectedCategory = "Food"
+            highlightSelected(btnFood)
+        }
 
+        btnTransport.setOnClickListener {
+            selectedCategory = "Transport"
+            highlightSelected(btnTransport)
+        }
+
+        btnShopping.setOnClickListener {
+            selectedCategory = "Shopping"
+            highlightSelected(btnShopping)
+        }
+
+        btnEntertainment.setOnClickListener {
+            selectedCategory = "Entertainment"
+            highlightSelected(btnEntertainment)
+        }
+
+        btnBills.setOnClickListener {
+            selectedCategory = "Bills"
+            highlightSelected(btnBills)
+        }
+
+        btnHealth.setOnClickListener {
+            selectedCategory = "Health"
+            highlightSelected(btnHealth)
+        }
+
+        btnPersonal.setOnClickListener {
+            selectedCategory = "Personal"
+            highlightSelected(btnPersonal)
+        }
+
+        btnOther.setOnClickListener {
+            selectedCategory = "Other"
+            highlightSelected(btnOther)
+        }
+
+        // Default selected
+        highlightSelected(btnFood)
+
+        // Edit mode
         expenseId = intent.getIntExtra("id", 0)
 
         if (expenseId != 0) {
-            etAmount.setText(intent.getDoubleExtra("amount", 0.0).toString())
+            etAmount.setText(
+                intent.getDoubleExtra("amount", 0.0).toString()
+            )
             etNote.setText(intent.getStringExtra("note"))
 
-            val category = intent.getStringExtra("category")
-            val position = categories.indexOf(category)
-
-            if (position >= 0) {
-                spCategory.setSelection(position)
-            }
+            selectedCategory =
+                intent.getStringExtra("category") ?: "Food"
         }
 
         btnSave.setOnClickListener {
@@ -74,13 +122,27 @@ class AddExpenseActivity : AppCompatActivity() {
         }
     }
 
+    private fun highlightSelected(selectedButton: MaterialButton) {
+        for (button in categoryButtons) {
+            button.strokeWidth = 0
+            button.alpha = 1f
+        }
+
+        selectedButton.strokeWidth = 2
+        selectedButton.strokeColor =
+            ContextCompat.getColorStateList(this, R.color.orange)
+    }
+
     private fun saveExpenseWithLocation() {
         val amountText = etAmount.text.toString()
-        val category = spCategory.selectedItem.toString()
         val note = etNote.text.toString()
 
         if (amountText.isEmpty()) {
-            Toast.makeText(this, "Please enter amount", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Please enter amount",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -107,7 +169,7 @@ class AddExpenseActivity : AppCompatActivity() {
             val expense = Expense(
                 id = expenseId,
                 amount = amountText.toDouble(),
-                category = category,
+                category = selectedCategory,
                 note = note,
                 date = System.currentTimeMillis(),
                 location = location
@@ -115,10 +177,20 @@ class AddExpenseActivity : AppCompatActivity() {
 
             if (expenseId == 0) {
                 db.expenseDao().insertExpense(expense)
-                Toast.makeText(this, "Expense Saved!", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    this,
+                    "Expense Saved!",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 db.expenseDao().updateExpense(expense)
-                Toast.makeText(this, "Expense Updated!", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    this,
+                    "Expense Updated!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             finish()

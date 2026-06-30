@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="#000000"
+    android:fitsSystemWindows="true"
+    android:paddingTop="16dp">
 
     <!-- Title -->
     <TextView
@@ -104,7 +106,7 @@
         android:paddingTop="10dp"
         android:clipToPadding="false" />
 
-    <!-- Floating + Button (Center Bottom) -->
+    <!-- Floating + Button -->
     <ImageView
         android:id="@+id/btnAddExpense"
         android:layout_width="70dp"
