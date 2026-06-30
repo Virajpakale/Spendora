@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 
@@ -16,15 +17,31 @@ class UpdateChecker(private val context: Context) {
         val request = JsonObjectRequest(
             url,
             { response ->
-                val latestVersion = response.getString("tag_name")
-                val currentVersion = "v1.0"
 
-                if (latestVersion != currentVersion) {
+                val latestVersion = response.getString("tag_name")
+
+                val currentVersion = context.packageManager
+                    .getPackageInfo(context.packageName, 0)
+                    .versionName
+
+                // Debug toast to check versions
+                Toast.makeText(
+                    context,
+                    "Latest: $latestVersion | Current: v$currentVersion",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                if (latestVersion != "v$currentVersion") {
                     showUpdateDialog(latestVersion)
                 }
+
             },
-            {
-                // Ignore errors
+            { error ->
+                Toast.makeText(
+                    context,
+                    "Update check failed: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         )
 
@@ -39,7 +56,7 @@ class UpdateChecker(private val context: Context) {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse(
-                        "https://github.com/YOUR_USERNAME/Spendora/releases/latest"
+                        "https://github.com/Virajpakale/Spendora/releases/latest"
                     )
                 )
                 context.startActivity(intent)

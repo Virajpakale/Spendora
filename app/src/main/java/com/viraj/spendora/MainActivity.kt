@@ -23,9 +23,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Auto update checker
+        // Check for app updates
         UpdateChecker(this).checkForUpdates()
 
+        // Database setup
         db = Room.databaseBuilder(
             applicationContext,
             ExpenseDatabase::class.java,
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             .allowMainThreadQueries()
             .build()
 
+        // Views
         recyclerView = findViewById(R.id.recyclerView)
         tvTotalSpent = findViewById(R.id.tvTotalSpent)
         tvStreakCount = findViewById(R.id.tvStreakCount)
@@ -43,12 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Add Expense
+        // Add Expense Button
         btnAddExpense.setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
         }
 
-        // Open Analytics
+        // Analytics Button
         btnAnalytics.setOnClickListener {
             startActivity(Intent(this, AnalyticsActivity::class.java))
         }
@@ -66,10 +68,11 @@ class MainActivity : AppCompatActivity() {
     private fun loadExpenses() {
         val expenses = db.expenseDao().getAllExpenses()
 
-        // Total spend
+        // Calculate total spend
         val total = expenses.sumOf { it.amount }
         tvTotalSpent.text = "₹${String.format("%.0f", total)}"
 
+        // Set adapter
         recyclerView.adapter = ExpenseAdapter(
             expenses,
             onDelete = { expense ->
@@ -79,10 +82,12 @@ class MainActivity : AppCompatActivity() {
             },
             onEdit = { expense ->
                 val intent = Intent(this, AddExpenseActivity::class.java)
+
                 intent.putExtra("id", expense.id)
                 intent.putExtra("amount", expense.amount)
                 intent.putExtra("category", expense.category)
                 intent.putExtra("note", expense.note)
+
                 startActivity(intent)
             }
         )
