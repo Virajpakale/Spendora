@@ -19,13 +19,21 @@ class UpdateChecker(private val context: Context) {
             { response ->
 
                 val latestVersionName = response.getString("tag_name")
+
+                // Example: v1.4 -> 14
                 val latestVersionCode =
-                    latestVersionName.replace("v", "").replace(".", "").toInt()
+                    latestVersionName.replace("v", "")
+                        .replace(".", "")
+                        .toLong()
 
                 val packageInfo =
-                    context.packageManager.getPackageInfo(context.packageName, 0)
+                    context.packageManager.getPackageInfo(
+                        context.packageName,
+                        0
+                    )
 
-                val currentVersionCode = packageInfo.versionCode
+                val currentVersionCode =
+                    packageInfo.longVersionCode
 
                 Toast.makeText(
                     context,
